@@ -36,7 +36,7 @@ router.post("/book",middleWare.isLoggedIn,(req,res)=>{
                         })
                     }
                     else{
-                        Booked.create({sdate:sdate,edate:edate,carbooked:carId,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
+                        Booked.create({vno:car.vno,sdate:sdate,edate:edate,carbooked:carId,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
                             if(err){
                                 res.send({
                                     message:"error"
@@ -52,7 +52,7 @@ router.post("/book",middleWare.isLoggedIn,(req,res)=>{
             else{
                 // car present at that point
                 // now add to booked and make booingStatus as 1
-                Booked.create({sdate:sdate,edate:edate,carbooked:carId,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
+                Booked.create({vno:car.vno,sdate:sdate,edate:edate,carbooked:carId,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
                     if(err){
                         res.send({
                             message:"error"
@@ -107,6 +107,21 @@ router.get("/check",(req,res)=>{
                     result.push(bookings);
                     res.send(result);
                 }
+            })
+        }
+    })
+})
+
+router.post("/cancel",(req,res)=>{
+    Booked.findOneAndRemove({vno:req.body.vno},(err,car)=>{
+        if(err){
+            res.send({
+                message:"error"
+            })
+        }
+        else{
+            Car.findByIdAndUpdate(car.carbooked,{bookingStatus:0},(err,detail)=>{
+                res.send(detail)
             })
         }
     })
