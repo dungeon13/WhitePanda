@@ -29,14 +29,14 @@ router.post("/book",middleWare.isLoggedIn,(req,res)=>{
             if(car.length==0){
                 // means no car remaining at time in pool
                 // check in booked model
-                Booked.findOne({spoint:spoint,etime:stime},(err,car)=>{
+                Booked.findOne({spoint:spoint,etime:stime},(err,car2)=>{
                     if(err){
                         res.send({
                             message:"error"
                         })
                     }
-                    else{
-                        Booked.create({vno:car.vno,sdate:sdate,edate:edate,carbooked:carId,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
+                    else if(car2!=null){
+                        Booked.create({vno:car2.vno,sdate:sdate,edate:edate,carbooked:car2.carbooked,user:User,spoint:spoint,epoint:epoint,stime:stime,etime:etime},(err,detail)=>{
                             if(err){
                                 res.send({
                                     message:"error"
@@ -45,6 +45,11 @@ router.post("/book",middleWare.isLoggedIn,(req,res)=>{
                             else{
                                 res.send(detail);
                             }
+                        })
+                    }
+                    else{
+                        res.send({
+                            message:"No car found"
                         })
                     }
                 })
