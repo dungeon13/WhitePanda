@@ -34,7 +34,8 @@ router.post("/login",function(req,res){
                 "message":"Invalid Username or password"
             })
         }
-        req.logIn(user,function(err){
+        else{
+            req.logIn(user,function(err){
             if(err){
                 res.send(err)
             }else{
@@ -43,6 +44,8 @@ router.post("/login",function(req,res){
                 })
             }
         })
+        }
+        
     })(req,res)
 })
 router.post("/signup",(req,res)=>{
